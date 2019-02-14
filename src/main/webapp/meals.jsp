@@ -37,23 +37,28 @@
 <body>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meals</h2>
+    <p><a href="mealForm.jsp">Add meal</a></p>
     <table id="meals">
         <thead>
             <tr>
                 <td>Date</td>
                 <td>Description</td>
                 <td>Calories</td>
+                <td colspan="2">Actions</td>
             </tr>
         </thead>
         <tbody>
-            <c:forEach items="${meals}" var="meal">
-                <tr bgcolor="${meal.excess ? '#dc143c' : '#006400'}">
-                    <fmt:parseDate value="${ meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-                    <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${ parsedDateTime }" /></td>
-                    <td><c:out value="${meal.description}"/></td>
-                    <td><c:out value="${meal.calories}"/></td>
-                </tr>
-            </c:forEach>
+        <c:forEach items="${meals}" var="meal">
+            <tr bgcolor="${meal.excess ? '#dc143c' : '#006400'}">
+                <fmt:parseDate value="${ meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${ parsedDateTime }" /></td>
+                <td><c:out value="${meal.description}"/></td>
+                <td><c:out value="${meal.calories}"/></td>
+                <td><a href="meals?action=delete&mealId=${meal.id}">Delete</a></td>
+                <td><a href="meals?action=update&mealId=${meal.id}">Update</a></td>
+
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 </body>
