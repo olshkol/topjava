@@ -20,6 +20,26 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meals</h2>
+    <form method=post action="meals">
+        <dl>
+            <dt>From date:</dt>
+            <dd><input type="date" name="startDate" value="${startDate}"></dd>
+        </dl>
+        <dl>
+            <dt>To date:</dt>
+            <dd><input type="date" name="endDate" value="${endDate}"></dd>
+        </dl>
+        <dl>
+            <dt>From time:</dt>
+            <dd><input type="time" name="startTime" value="${startTime}"></dd>
+        </dl>
+        <dl>
+            <dt>To time:</dt>
+            <dd><input type="time" name="endTime" value="${endTime}"></dd>
+        </dl>
+        <button name="actionFilter" value="filter" type="submit">Filter</button>
+        <button name="cancelFilter" value="cancel" type="submit">Cancel</button>
+    </form>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">

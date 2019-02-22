@@ -3,13 +3,18 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.util.MealsUtil.endDate;
+import static ru.javawebinar.topjava.util.MealsUtil.startDate;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -49,10 +54,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return repository.get(userId)
-                .values()
+        if (repository.containsKey(userId)) {
+            return sortAndFilter(repository.get(userId));
+        }
+        return new ArrayList<>();
+    }
+
+    private List<Meal> sortAndFilter(Map<Integer, Meal> meals){
+        return meals.values()
                 .stream()
                 .sorted()
+                .filter(meal -> DateTimeUtil.isBetween(meal.getDateTime().toLocalDate(), startDate, endDate))
                 .collect(Collectors.toList());
     }
 }

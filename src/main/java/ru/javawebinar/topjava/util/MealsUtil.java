@@ -18,15 +18,23 @@ import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
     public static final List<Meal> MEALS = Arrays.asList(
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 3, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 3, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 3, 20, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 1, 10, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 1, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2019, Month.FEBRUARY, 1, 20, 0), "Ужин", 510)
     );
 
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
+
+    public static LocalDate startDate = LocalDate.MIN;
+
+    public static LocalDate endDate = LocalDate.MAX;
+
+    public static LocalTime startTime = LocalTime.MIN;
+
+    public static LocalTime endTime = LocalTime.MAX;
 
     public static List<MealTo> getWithExcess(Collection<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExcess(meals, caloriesPerDay, meal -> true);
