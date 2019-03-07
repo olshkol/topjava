@@ -37,20 +37,24 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        int numberOfRowsAffected = jdbcTemplate.queryForObject("SELECT COUNT(date_time) FROM meals WHERE user_id=? AND date_time=?", new Object[]{userId, meal.getDateTime()}, Integer.class);
+        if (numberOfRowsAffected != 0)
+        {
+            return null;
+        }
+
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("date_time", meal.getDateTime())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
                 .addValue("user_id", userId);
-        if (meal.isNew()){
+        if (meal.isNew()) {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
-        }
-        else if (namedParameterJdbcTemplate.update(
+        } else if (namedParameterJdbcTemplate.update(
                 "UPDATE meals SET date_time=:date_time, description=:description, " +
-                        "calories=:calories WHERE id=:id AND user_id=:user_id", map)==0)
-        {
+                        "calories=:calories WHERE id=:id AND user_id=:user_id", map) == 0) {
             return null;
         }
         return meal;
@@ -74,6 +78,6 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT id, date_time, description, calories FROM meals WHERE user_id=? AND (date_time>? AND date_time<?) ORDER BY date_time DESC", ROW_MAPPER, userId, startDate, endDate);
+        return jdbcTemplate.query("SELECT id, date_time, description, calories FROM meals WHERE user_id=? AND (date_time BETWEEN ? AND ?) ORDER BY date_time DESC", ROW_MAPPER, userId, startDate, endDate);
     }
 }
