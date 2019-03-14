@@ -1,7 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,6 +28,11 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+    private static long startClassTime = 0;
+    private static long endClassTime = 0;
+    private static long startMethodTime = 0;
+    private static long endMethodTime = 0;
 
     static {
         SLF4JBridgeHandler.install();
@@ -32,6 +40,31 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @BeforeClass
+    public static void beforeClass(){
+        startClassTime = System.currentTimeMillis();
+    }
+
+    @AfterClass
+    public static void afterClass(){
+        endClassTime = System.currentTimeMillis();
+        log.info(MealServiceTest.class.getSimpleName() + " runtime - " + (endClassTime - startClassTime));
+    }
+
+    @Before
+    public void before(){
+        startMethodTime = System.currentTimeMillis();
+    }
+
+    @After
+    public void after(){
+        endMethodTime = System.currentTimeMillis();
+        log.info("Runtime current test - " + (endMethodTime-startMethodTime));
+    }
 
     @Test
     public void delete() throws Exception {
@@ -86,5 +119,23 @@ public class MealServiceTest {
         assertMatch(service.getBetweenDates(
                 LocalDate.of(2015, Month.MAY, 30),
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
+    }
+
+    @Test
+    public void throwsNothing(){
+
+    }
+
+    @Test
+    public void throwsNotFoundException(){
+        thrown.expect(NotFoundException.class);
+        throw new NotFoundException("Exceptions happens!");
+    }
+
+    @Test
+    public void thrownNullPointerException()
+    {
+        thrown.expect(NullPointerException.class);
+        throw new NullPointerException();
     }
 }
