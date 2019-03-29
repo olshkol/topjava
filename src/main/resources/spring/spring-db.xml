@@ -68,8 +68,9 @@
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
     </beans>
+
     <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+        <bean class="ru.javawebinar.topjava.repository.jdbc.JdbcUserRepositoryImpl"/>
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
         </bean>
@@ -78,6 +79,26 @@
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
     </beans>
+
+    <beans profile="hsqldb">
+        <beans profile="jdbc">
+            <bean id="jdbcHsqldbMealRepository" class="ru.javawebinar.topjava.repository.jdbc.JdbcHsqldbMealRepositoryImpl">
+                <constructor-arg index="0" ref="jdbcTemplate"/>
+                <constructor-arg index="1" ref="namedJdbcTemplate"/>
+            </bean>
+        </beans>
+    </beans>
+
+    <beans profile="postgres">
+        <beans profile="jdbc">
+            <bean id="jdbcPostgresMealRepository" class="ru.javawebinar.topjava.repository.jdbc.JdbcPostgresMealRepositoryImpl">
+                <constructor-arg index="0" ref="jdbcTemplate"/>
+                <constructor-arg index="1" ref="namedJdbcTemplate"/>
+            </bean>
+        </beans>
+    </beans>
+
+
     <beans profile="jpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
     </beans>
