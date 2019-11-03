@@ -1,11 +1,12 @@
 let context, form;
 
 function makeEditable(ctx) {
+    $("#datatable_filter").css("display", "none");
     context = ctx;
     form = $('#detailsForm');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
+            deleteRow(this.parentElement.parentElement.getAttribute("id"));
         }
     });
 
@@ -36,6 +37,7 @@ function updateTable() {
     $.get(context.ajaxUrl, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
+    filter();
 }
 
 function save() {
@@ -77,3 +79,17 @@ function failNoty(jqXHR) {
         layout: "bottomRight"
     }).show();
 }
+
+function cancel() {
+
+    context.datatableApi
+        .search('')
+        .columns().search('')
+        .draw();
+}
+
+function filter() {
+    context.datatableApi.search(this.value).draw();
+}
+
+$('.filter').on('keyup', filter);
