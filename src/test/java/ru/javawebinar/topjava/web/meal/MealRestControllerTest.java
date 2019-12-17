@@ -82,6 +82,19 @@ class MealRestControllerTest extends AbstractControllerTest {
         assertMatch(service.get(MEAL1_ID, START_SEQ), updated);
     }
 
+
+    @Test
+    void testUpdateNotValid() throws Exception {
+        Meal updated = getUpdatedNotValid();
+
+        mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(USER))
+                .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
     @Test
     void testCreate() throws Exception {
         Meal created = getCreated();
@@ -95,6 +108,17 @@ class MealRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, created);
         assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL2, created, ADMIN_MEAL1);
+    }
+
+    @Test
+    void testCreateNotValid() throws Exception {
+        Meal created = getCreatedNotValid();
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JsonUtil.writeValue(created)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
